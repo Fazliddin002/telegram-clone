@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Clone</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            padding: 0;
+        }
+        .sidebar {
+            background-color: #0d2d3c;
+            color: #f3f3f3;
+            width: 25%;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .chat-window {
+            background-color: #081d27;
+            width: 75%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            border-radius: 10px;
+            margin: 5px 0;
+            padding: 10px;
+            max-width: 60%;
+        }
+        .message.sent {
+            align-self: flex-end;
+            background-color: #DCF8C6;
+        }
+        .message.received {
+            align-self: flex-start;
+            background-color: #859ea8;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .message-input {
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            display: flex;
+        }
+        .message-input input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        .profile{
+            background-color: #0d2d3c;
+            color: #f3f3f3;
+            width: 100%;
+            height: 100%;
+        }
+        .message-input button {
+            background-color: #1d74b8;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50%;
+        }
+        .logout-button {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .search-bar {
+            margin-top: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+        .username {
+            text-align: center;
+        }
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex: 1; /* Added this line to make the chat messages take remaining space */
+            overflow-y: auto; /* Added this line to enable scrolling for chat messages */
+        }
+
+        .message {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+
+        .sent {
+            align-self: flex-end;
+            background-color: #6fdfe4; /* O'ng tarafda yozilgan xabarlarning fon rangi */
+        }
+
+        .received {
+            align-self: flex-start;
+            background-color: #f3f3f3; /* Chap tarafda yozilgan xabarlarning fon rangi */
+        }
+
+        .nav .rounded-circle {
+            border: 2px solid #ccc;
+        }
+
+        /* Added the following CSS to position the message input box */
+        .message-input-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #081d27;
+        }
+
+        .message-input-container input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .message-input-container button {
+            background-color: #1d74b8;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50%;
+        }
+        .message-image {
+            max-width: 200px; /* Adjust the size as needed */
+            max-height: 200px; /* Adjust the size as needed */
+            display: block;
+            margin-top: 5px;
+        }
+        .chat-messages .message {
+            border-radius: 0;
+        }
+        .chat-messages .message {
+            margin-bottom: 10px;
+        }
+        .chat-messages .message-space {
+            height: 10px; /* Adjust the height as per your requirements */
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="sidebar p-3">
+        <form action="/login" method="get">
+            <button class="btn btn-block logout-button">Log Out</button>
+        </form>
+        <input type="text" class="form-control mb-3 search-bar" placeholder="Search...">
+
+        <div class="card">
+            <ul class="list-group ">
+                <form action="/chat" method="get" th:each="user : ${users}" class="text-dark text-center ">
+                    <input type="hidden" name="id" th:value="${user.id}">
+                    <button type="submit" class="btn btn-block">
+                        <li th:text="${user.username}" th:class="list-group-item"></li>
+                    </button>
+                </form>
+            </ul>
+        </div>
+    </div>
+    <div class="chat-window d-flex flex-column">
+        <form action="/profile" method="get">
+            <input type="hidden" name="id" th:value="${chatUser.id}">
+            <button class="btn btn-block profile username" th:text="${chatUser.getUsername()}"></button>
+        </form>
+
+        <div class="chat-messages p-3" style="height: 400px; overflow-y: auto;">
+            <div class="message mb-2 d-flex" th:each="message : ${massages}" th:class="${chatUser.id == message.to.id ? 'sent': 'received'}">
+                <p class="message-text m-0" th:text="${message.text}"></p>
+                <div th:if="${message.file != null}">
+                    <img class="message-image" th:src="'/file?id='+${message.id}" alt="">
+                </div>
+                <span class="message-time ms-2" th:text="${message.getTime()}">21:36</span>
+            </div>
+            <br>
+        </div>
+
+
+        <form id="messageForm" action="/sendMessage" method="post" enctype="multipart/form-data">
+            <div class="input-group mb-3">
+                <label for="file" class="input-group-text btn-info">&</label>
+                <input hidden="true" type="file" id="file" name="file" class="form-control">
+                <input type="text" class="form-control" name="message" placeholder="Send Message">
+                <input type="hidden" name="to" th:value="${chatUser.id}">
+                <button class="btn btn-primary" type="submit">Send</button>
+            </div>
+        </form>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("messageForm").addEventListener("submit", function (event) {
+                    let message = document.querySelector("input[name='message']").value.trim();
+                    let file = document.querySelector("input[name='file']").files.length;
+
+                    if (message === "" && file === 0) {
+                        alert("Xabar yoki fayl jo‘natilishi shart!");
+                        event.preventDefault(); // Formani jo‘natishni to‘xtatadi
+                    }
+                });
+            });
+        </script>
+
+    </div>
+</div>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>

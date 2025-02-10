@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Clone</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            padding: 0;
+        }
+        .sidebar {
+            background-color: #0d2d3c;
+            color: #f3f3f3;
+            width: 25%;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .chat-window {
+            background-color: #081d27;
+            width: 75%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-input input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .message-input button {
+            background-color: #1d74b8;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50%;
+        }
+
+        .search-bar {
+            margin-top: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .logout-button {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="sidebar p-3">
+        <form action="/login" method="get">
+    <button class="btn btn-block logout-button">Log Out</button>
+        </form>
+
+        <input type="text" class="form-control mb-3 search-bar" placeholder="Search...">
+
+        <div class="card">
+        <ul class="list-group ">
+            <form action="/chat" method="get" th:each="user : ${users}" class="text-dark text-center ">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <button type="submit" class="btn btn-block">
+                <li th:text="${user.username}" th:class="list-group-item"></li>
+                </button>
+            </form>
+        </ul>
+    </div>
+    </div>
+
+    <div class="chat-window d-flex flex-column">
+
+
+
+
+
+
+    </div>
+</div>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>
