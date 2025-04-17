@@ -1,83 +1,89 @@
-Telegram Clone - Spring Boot Backend
+# 📬 Telegram Web Chat Application
 
-Bu loyiha Telegram kabi chat platformasi bo‘lib, Spring Boot va boshqa zamonaviy backend texnologiyalaridan foydalangan holda yaratilgan. Foydalanuvchilar autentifikatsiya qilinishi, real vaqtda xabar almashishi va profilini boshqarishi mumkin.
+A **Telegram-style chat web application** that allows users to register, log in, view profiles, chat privately, and exchange files. Built using Spring Boot, Spring Security, Thymeleaf, and PostgreSQL.
 
-🚀 Texnologiyalar
+---
 
-Spring Boot - Backend framework
+## 🚀 Technologies Used
 
-Spring Security & JWT - Autentifikatsiya va avtorizatsiya
+- **Java 17**
+- **Spring Boot 3**
+- **Spring Web**
+- **Spring Data JPA**
+- **Spring Security**
+- **Thymeleaf**
+- **Validation**
+- **PostgreSQL**
+- **Lombok**
 
-PostgreSQL - Ma'lumotlar bazasi
+---
 
-Local Storage - Fayllarni yuklash
+## 📁 Project Structure
 
-Thymeleaf - Server tomonida renderlash
+| File                 | Description                                                      |
+|----------------------|------------------------------------------------------------------|
+| `LoginController`    | Handles user login and registration                              |
+| `UserController`     | Displays all available users on the home page                    |
+| `ChatController`     | Manages chats, file uploads/downloads, and message display       |
+| `ProfileController`  | Displays user profile and handles profile photo access           |
 
-Frontend: HTML & JavaScript (Thymeleaf UI asosida)
+---
 
-⚙ O‘rnatish va Ishga Tushirish
+## ✅ Features
 
-Talablar
+- User registration with phone number and profile image validation  
+- Secure login using Spring Security  
+- View all users except the current logged-in user  
+- Real-time private chat interface  
+- Send messages with optional file attachments (images, docs, etc.)  
+- View/download attached files  
+- View user profiles and profile images  
 
-Quyidagi dasturlar o‘rnatilgan bo‘lishi kerak:
+---
 
-Java 17+
+## ▶️ How to Run
 
-Maven
+1. **Clone the Project**
+   ```bash
+   git clone https://github.com/your-username/telegram-web-chat.git
+   cd telegram-web-chat
+   ```
 
-PostgreSQL (localhost:5432 da ishlashi kerak)
+2. **Configure PostgreSQL**
+   Open the `application.properties` file and set your database credentials:
+   ```properties
+   spring.datasource.url=jdbc:postgresql://localhost:5432/your_db
+   spring.datasource.username=your_username
+   spring.datasource.password=your_password
+   ```
 
-Loyihani klonlash
+3. **Run the Application**
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
- git clone https://github.com/Fazliddin002/telegram-clone.git
- cd telegram-clone
+---
 
-Ma'lumotlar bazasini sozlash
+## 🔐 Security Notes
 
-application.properties faylini yangilang yoki muhit o‘zgaruvchilari orqali sozlang:
+- Passwords are securely encrypted using `PasswordEncoder`
+- Input validation includes:
+  - Unique username
+  - Phone number format: `+998xxxxxxxxx`
+  - Password length and matching confirmation
+  - Required profile image file
 
-spring.datasource.username=your_db_user
-spring.datasource.password=your_db_password
-spring.datasource.url=jdbc:postgresql://localhost:5432/telegram
+---
 
-Loyihani ishga tushirish
+## 🌐 Endpoints Overview
 
-mvn spring-boot:run
-
-Tizim http://localhost:8080 da ishlaydi 🚀
-
-📌 API Endpoints
-
-1. Autentifikatsiya va Foydalanuvchi Boshqaruvi
-
-POST /auth/register – Yangi foydalanuvchi ro‘yxatdan o‘tadi
-
-POST /auth/login – JWT token olish uchun login qilish
-
-GET /users – Barcha foydalanuvchilar ro‘yxati
-
-2. Chat va Xabarlar
-
-GET /chats/{id} – Berilgan ID bo‘yicha chat xabarlarini olish
-
-POST /messages – Yangi xabar jo‘natish
-
-🔒 Xavfsizlik
-
-JWT Authentication orqali endpointlar himoyalangan
-
-Ma'lumotlar maxfiyligi uchun .env yoki application.properties orqali parollar saqlanishi kerak
-
-Fayllarni yuklash funksiyasi xavfsizlik choralari bilan ta’minlangan
-
-💡 Kelajakdagi Takomillashtirishlar
-
-WebSocket qo‘shish orqali real vaqt rejimida chat qilish
-
-Frontend React yoki Vue.js kabi zamonaviy framework yordamida qayta yozish
-
-Cloud Deploy – AWS yoki GCP ga joylashtirish
-
-💬 Taklif va fikrlar uchun ochiqmiz! 😊
-
+| Method | Endpoint         | Description                                |
+|--------|------------------|--------------------------------------------|
+| GET    | `/login`         | Show login page                            |
+| POST   | `/register`      | Handle user registration                   |
+| GET    | `/`              | Show all users (except the current user)   |
+| GET    | `/chat?id=X`     | Open chat with user X                      |
+| POST   | `/sendMessage`   | Send message (text + optional file)        |
+| GET    | `/file?id=X`     | Download file attached to message          |
+| GET    | `/photo?id=X`    | Get user profile photo                     |
+| GET    | `/profile?id=X`  | View a user's profile                      |
